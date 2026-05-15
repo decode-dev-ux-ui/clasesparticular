@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+.login-wrapper {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 50%, #dde3ec 100%);
+  min-height: 100vh;
+}
+
+.login-intro .title {
+  color: #755f22;
+}
+
+.login-intro .subtitle {
+  color: #5a6c7d;
+}
+
+.features {
+  margin-top: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #4c684a;
+}
+
+.login-card {
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  background: white;
+}
+
+.login-card .card-content {
+  padding: 2.5rem;
+}
+
+.login-divider {
+  background-color: #e0e0e0;
+  margin: 1.5rem 0;
+}
+
+.login-card .input {
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.login-card .input:focus {
+  border-color: #038c48;
+  box-shadow: 0 0 0 3px rgba(102, 234, 111, 0.1);
+}
+
+.login-card .icon svg,
+.login-wrapper .icon svg {
+  color: #7a7a7a;
+  fill: #7a7a7a;
+  transition:
+    color 0.3s ease,
+    fill 0.3s ease;
+}
+
+.login-card .control:focus-within svg {
+  color: #038c48;
+  fill: #038c48;
+}
+
+.login-card .input:focus ~ .icon svg {
+  color: #038c48;
+  fill: #038c48;
+}
+
+.login-card .button.is-primary {
+  background: linear-gradient(135deg, #038c48 0%, #12d746 100%);
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-card .button.is-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(234, 188, 102, 0.4);
+}
+
+.login-card .button.is-primary:active {
+  transform: translateY(0);
+}
+
+.login-card .button.is-outlined {
+  border-color: #e2e8f0;
+  color: #68544a;
+}
+
+.login-card .button.is-outlined:hover {
+  border-color: #038c48;
+  color: #038c48;
+  background: white;
+}
+.text-link {
+  color: #038c48;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.home-wrapper {
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.feature-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.alumno-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  height: 100%;
+}
+
+.alumno-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
