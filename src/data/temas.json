@@ -1,0 +1,17 @@
+{
+  "Matemáticas": ["Números", "Álgebra", "Geometría", "Ecuaciones", "Probabilidad"],
+  "Lenguaje": ["Lectura", "Escritura", "Gramática", "Ortografía", "Literatura"],
+  "Inglés": ["Vocabulario", "Gramática", "Reading", "Listening", "Speaking"],
+  "Historia": ["Edad Antigua", "Edad Media", "Edad Moderna", "Edad Contemporánea", "Historia de Chile"],
+  "Ciencias Naturales": ["Ecosistemas", "Cuerpo Humano", "Materia", "Energía", "Universo"],
+  "Física": ["Mecánica", "Termodinámica", "Óptica", "Electricidad", "Ondas"],
+  "Química": ["Átomos", "Enlaces", "Reacciones", "Soluciones", "Tabla Periódica"],
+  "Biología": ["Célula", "Genética", "Evolución", "Anatomía", "Microbiología"],
+  "Artes": ["Dibujo", "Pintura", "Escultura", "Arte digital", "Historia del arte"],
+  "Música": ["Ritmo", "Melodía", "Instrumentos", "Lectura musical", "Composición"],
+  "Educación Física": ["Deportes", "Acondicionamiento", "Coordinación", "Flexibilidad", "Trabajo en equipo"],
+  "Tecnología": ["Programación", "Ofimática", "Hardware", "Redes", "Seguridad"],
+  "Religión": ["Valores", "Historias bíblicas", "Ética", "Convivencia", "Espiritualidad"],
+  "Filosofía": ["Pensamiento crítico", "Ética", "Lógica", "Metafísica", "Argumentación"],
+  "Orientación": ["Autoconocimiento", "Convivencia", "Proyecto de vida", "Habilidades sociales", "Autocuidado"]
+}

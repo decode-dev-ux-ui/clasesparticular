@@ -1,0 +1,599 @@
+[
+  {
+    "subject": "Matemáticas",
+    "topics": [
+      {
+        "title": "Números del 1 al 10",
+        "isDefault": true
+      },
+      {
+        "title": "Números del 1 al 100",
+        "isDefault": true
+      },
+      {
+        "title": "Conteo y secuencias numéricas",
+        "isDefault": true
+      },
+      {
+        "title": "Sumas simples",
+        "isDefault": true
+      },
+      {
+        "title": "Restas simples",
+        "isDefault": true
+      },
+      {
+        "title": "Sumas con llevada",
+        "isDefault": true
+      },
+      {
+        "title": "Restas con préstamo",
+        "isDefault": true
+      },
+      {
+        "title": "Tablas de multiplicar",
+        "isDefault": true
+      },
+      {
+        "title": "Multiplicación",
+        "isDefault": true
+      },
+      {
+        "title": "División exacta",
+        "isDefault": true
+      },
+      {
+        "title": "División con resto",
+        "isDefault": true
+      },
+      {
+        "title": "Fracciones básicas",
+        "isDefault": true
+      },
+      {
+        "title": "Fracciones equivalentes",
+        "isDefault": true
+      },
+      {
+        "title": "Números decimales",
+        "isDefault": true
+      },
+      {
+        "title": "Porcentajes",
+        "isDefault": true
+      },
+      {
+        "title": "Potencias y raíces",
+        "isDefault": true
+      },
+      {
+        "title": "Álgebra básica",
+        "isDefault": true
+      },
+      {
+        "title": "Ecuaciones de primer grado",
+        "isDefault": true
+      },
+      {
+        "title": "Geometría: figuras planas",
+        "isDefault": true
+      },
+      {
+        "title": "Perímetro y área",
+        "isDefault": true
+      },
+      {
+        "title": "Volumen",
+        "isDefault": true
+      },
+      {
+        "title": "Estadística básica",
+        "isDefault": true
+      },
+      {
+        "title": "Probabilidad",
+        "isDefault": true
+      },
+      {
+        "title": "Sistemas de medida",
+        "isDefault": true
+      },
+      {
+        "title": "Resolución de problemas",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Lenguaje y Comunicación",
+    "topics": [
+      {
+        "title": "Reconocimiento de letras",
+        "isDefault": true
+      },
+      {
+        "title": "Vocales y consonantes",
+        "isDefault": true
+      },
+      {
+        "title": "Sílabas",
+        "isDefault": true
+      },
+      {
+        "title": "Lectura de palabras simples",
+        "isDefault": true
+      },
+      {
+        "title": "Lectura de oraciones",
+        "isDefault": true
+      },
+      {
+        "title": "Lectura comprensiva",
+        "isDefault": true
+      },
+      {
+        "title": "Tipos de texto: narración",
+        "isDefault": true
+      },
+      {
+        "title": "Tipos de texto: descripción",
+        "isDefault": true
+      },
+      {
+        "title": "Tipos de texto: instrucción",
+        "isDefault": true
+      },
+      {
+        "title": "Producción de texto escrito",
+        "isDefault": true
+      },
+      {
+        "title": "Ortografía básica",
+        "isDefault": true
+      },
+      {
+        "title": "Puntuación",
+        "isDefault": true
+      },
+      {
+        "title": "Sinónimos y antónimos",
+        "isDefault": true
+      },
+      {
+        "title": "Sustantivos y verbos",
+        "isDefault": true
+      },
+      {
+        "title": "Adjetivos",
+        "isDefault": true
+      },
+      {
+        "title": "Gramática: sujeto y predicado",
+        "isDefault": true
+      },
+      {
+        "title": "Texto literario vs no literario",
+        "isDefault": true
+      },
+      {
+        "title": "Comprensión lectora",
+        "isDefault": true
+      },
+      {
+        "title": "Resumen y síntesis",
+        "isDefault": true
+      },
+      {
+        "title": "Argumentación oral y escrita",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Historia y Ciencias Sociales",
+    "topics": [
+      {
+        "title": "Mi familia y comunidad",
+        "isDefault": true
+      },
+      {
+        "title": "El barrio y la ciudad",
+        "isDefault": true
+      },
+      {
+        "title": "Pueblos originarios de Chile",
+        "isDefault": true
+      },
+      {
+        "title": "Historia de Chile: colonia",
+        "isDefault": true
+      },
+      {
+        "title": "Historia de Chile: independencia",
+        "isDefault": true
+      },
+      {
+        "title": "Historia de Chile: siglo XX",
+        "isDefault": true
+      },
+      {
+        "title": "Geografía de Chile: regiones",
+        "isDefault": true
+      },
+      {
+        "title": "Relieve y clima de Chile",
+        "isDefault": true
+      },
+      {
+        "title": "América Latina: historia y geografía",
+        "isDefault": true
+      },
+      {
+        "title": "Historia universal: antigüedad",
+        "isDefault": true
+      },
+      {
+        "title": "Historia universal: edad media",
+        "isDefault": true
+      },
+      {
+        "title": "Historia universal: modernidad",
+        "isDefault": true
+      },
+      {
+        "title": "Derechos humanos",
+        "isDefault": true
+      },
+      {
+        "title": "Democracia y ciudadanía",
+        "isDefault": true
+      },
+      {
+        "title": "Economía básica",
+        "isDefault": true
+      },
+      {
+        "title": "Medio ambiente y desarrollo sustentable",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Ciencias Naturales",
+    "topics": [
+      {
+        "title": "El cuerpo humano",
+        "isDefault": true
+      },
+      {
+        "title": "Los sentidos",
+        "isDefault": true
+      },
+      {
+        "title": "Alimentación y nutrición",
+        "isDefault": true
+      },
+      {
+        "title": "Higiene y salud",
+        "isDefault": true
+      },
+      {
+        "title": "Animales vertebrados e invertebrados",
+        "isDefault": true
+      },
+      {
+        "title": "Plantas: partes y funciones",
+        "isDefault": true
+      },
+      {
+        "title": "Ecosistemas",
+        "isDefault": true
+      },
+      {
+        "title": "Ciclo del agua",
+        "isDefault": true
+      },
+      {
+        "title": "El sistema solar",
+        "isDefault": true
+      },
+      {
+        "title": "La Tierra y sus capas",
+        "isDefault": true
+      },
+      {
+        "title": "Materia y sus estados",
+        "isDefault": true
+      },
+      {
+        "title": "Mezclas y soluciones",
+        "isDefault": true
+      },
+      {
+        "title": "Energía: tipos y transformación",
+        "isDefault": true
+      },
+      {
+        "title": "Electricidad básica",
+        "isDefault": true
+      },
+      {
+        "title": "Fuerzas y movimiento",
+        "isDefault": true
+      },
+      {
+        "title": "Medioambiente y contaminación",
+        "isDefault": true
+      },
+      {
+        "title": "Reproducción en seres vivos",
+        "isDefault": true
+      },
+      {
+        "title": "Célula y tejidos",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Inglés",
+    "topics": [
+      {
+        "title": "Alphabet and phonics",
+        "isDefault": true
+      },
+      {
+        "title": "Colors and numbers",
+        "isDefault": true
+      },
+      {
+        "title": "Greetings and farewells",
+        "isDefault": true
+      },
+      {
+        "title": "Family vocabulary",
+        "isDefault": true
+      },
+      {
+        "title": "Body parts",
+        "isDefault": true
+      },
+      {
+        "title": "Animals vocabulary",
+        "isDefault": true
+      },
+      {
+        "title": "Food and drinks",
+        "isDefault": true
+      },
+      {
+        "title": "Classroom objects",
+        "isDefault": true
+      },
+      {
+        "title": "Days and months",
+        "isDefault": true
+      },
+      {
+        "title": "Present simple",
+        "isDefault": true
+      },
+      {
+        "title": "Present continuous",
+        "isDefault": true
+      },
+      {
+        "title": "Past simple",
+        "isDefault": true
+      },
+      {
+        "title": "Future with will / going to",
+        "isDefault": true
+      },
+      {
+        "title": "Wh-questions",
+        "isDefault": true
+      },
+      {
+        "title": "Adjectives",
+        "isDefault": true
+      },
+      {
+        "title": "Reading comprehension basic",
+        "isDefault": true
+      },
+      {
+        "title": "Writing sentences",
+        "isDefault": true
+      },
+      {
+        "title": "Oral expression",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Educación Física",
+    "topics": [
+      {
+        "title": "Esquema corporal",
+        "isDefault": true
+      },
+      {
+        "title": "Coordinación motora gruesa",
+        "isDefault": true
+      },
+      {
+        "title": "Coordinación motora fina",
+        "isDefault": true
+      },
+      {
+        "title": "Lateralidad",
+        "isDefault": true
+      },
+      {
+        "title": "Equilibrio",
+        "isDefault": true
+      },
+      {
+        "title": "Habilidades motrices básicas",
+        "isDefault": true
+      },
+      {
+        "title": "Atletismo básico",
+        "isDefault": true
+      },
+      {
+        "title": "Juegos colectivos",
+        "isDefault": true
+      },
+      {
+        "title": "Deporte: fútbol",
+        "isDefault": true
+      },
+      {
+        "title": "Deporte: básquetbol",
+        "isDefault": true
+      },
+      {
+        "title": "Deporte: voleibol",
+        "isDefault": true
+      },
+      {
+        "title": "Vida activa y hábitos saludables",
+        "isDefault": true
+      },
+      {
+        "title": "Relajación y respiración",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Artes Visuales",
+    "topics": [
+      {
+        "title": "Colores primarios y secundarios",
+        "isDefault": true
+      },
+      {
+        "title": "Línea y forma",
+        "isDefault": true
+      },
+      {
+        "title": "Textura y volumen",
+        "isDefault": true
+      },
+      {
+        "title": "Técnica: dibujo",
+        "isDefault": true
+      },
+      {
+        "title": "Técnica: pintura",
+        "isDefault": true
+      },
+      {
+        "title": "Técnica: collage",
+        "isDefault": true
+      },
+      {
+        "title": "Técnica: escultura básica",
+        "isDefault": true
+      },
+      {
+        "title": "Apreciación de obras de arte",
+        "isDefault": true
+      },
+      {
+        "title": "Arte chileno y latinoamericano",
+        "isDefault": true
+      },
+      {
+        "title": "Arte abstracto vs figurativo",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Música",
+    "topics": [
+      {
+        "title": "Sonido y silencio",
+        "isDefault": true
+      },
+      {
+        "title": "Pulso y ritmo",
+        "isDefault": true
+      },
+      {
+        "title": "Altura del sonido",
+        "isDefault": true
+      },
+      {
+        "title": "Figuras musicales básicas",
+        "isDefault": true
+      },
+      {
+        "title": "Lectura de partituras básica",
+        "isDefault": true
+      },
+      {
+        "title": "Instrumentos musicales",
+        "isDefault": true
+      },
+      {
+        "title": "Canto y voz",
+        "isDefault": true
+      },
+      {
+        "title": "Folclor chileno",
+        "isDefault": true
+      },
+      {
+        "title": "Géneros musicales",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "subject": "Tecnología e Informática",
+    "topics": [
+      {
+        "title": "Partes del computador",
+        "isDefault": true
+      },
+      {
+        "title": "Uso del teclado y mouse",
+        "isDefault": true
+      },
+      {
+        "title": "Sistema operativo básico",
+        "isDefault": true
+      },
+      {
+        "title": "Internet y navegación segura",
+        "isDefault": true
+      },
+      {
+        "title": "Procesador de texto",
+        "isDefault": true
+      },
+      {
+        "title": "Hoja de cálculo básica",
+        "isDefault": true
+      },
+      {
+        "title": "Presentaciones digitales",
+        "isDefault": true
+      },
+      {
+        "title": "Pensamiento computacional",
+        "isDefault": true
+      },
+      {
+        "title": "Programación básica con bloques",
+        "isDefault": true
+      }
+    ]
+  }
+]
