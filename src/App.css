@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════
+   LOGIN — Pantalla de inicio de sesión
+   ═══════════════════════════════════════════ */
 .login-wrapper {
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 50%, #dde3ec 100%);
   min-height: 100vh;
@@ -103,6 +106,9 @@
   transition: all 0.3s ease;
 }
 
+/* ═══════════════════════════════════════════
+   HOME — Página principal
+   ═══════════════════════════════════════════ */
 .home-wrapper {
   background: #f5f7fa;
   min-height: 100vh;
@@ -119,6 +125,9 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* ═══════════════════════════════════════════
+   ALUMNOS — Tarjetas de alumno
+   ═══════════════════════════════════════════ */
 .alumno-card {
   transition: all 0.3s ease;
   border-radius: 12px;
@@ -128,4 +137,598 @@
 .alumno-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Utilidades generales ─── */
+.cursor-pointer { cursor: pointer; }
+.d-none { display: none; }
+.d-inline-block { display: inline-block; }
+.fs-11 { font-size: 11px; }
+.text-capitalize { text-transform: capitalize; }
+.minw-32 { min-width: 32px; }
+.minh-300 { min-height: 300px; }
+.flex-shrink-0 { flex-shrink: 0; }
+.flex-1 { flex: 1; }
+.gap-05 { gap: 0.5rem; }
+.gap-075 { gap: 0.75rem; }
+.mt-8 { margin-top: 8px; }
+
+/* ─── Barras de progreso ─── */
+.progress-track {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+.progress-fill {
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 4px;
+  transition: width 0.5s;
+}
+.progress-lg {
+  height: 8px;
+  border-radius: 8px;
+}
+.progress-lg .progress-fill {
+  height: 8px;
+  border-radius: 8px;
+}
+.progress-indicator {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 6px;
+}
+.progress-indicator .progress-fill {
+  height: 6px;
+  border-radius: 6px;
+}
+.progress-fill-green {
+  background: linear-gradient(90deg, #48c774, #2ecc71);
+}
+
+/* ─── Selector de animal (avatar) ─── */
+.animal-avatar {
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+  border-radius: 64px;
+  margin: 0 auto 0.5rem;
+  cursor: pointer;
+  background: #f0f4ff;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.animal-picker-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 208px;
+}
+.animal-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+.animal-option {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.animal-option-selected { background: #667eea; }
+.animal-option-default { background: transparent; }
+
+/* ─── Subtítulo del modal Finalizar Clase ─── */
+.finalizar-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════
+   MODALES — Contenedores con ancho fijo
+   ═══════════════════════════════════════════ */
+.modal-card-640 { width: 640px; }
+.modal-card-720 { width: 1100px; max-height: 95vh; display: flex; flex-direction: column; }
+.modal-card-800 { width: 1100px; max-height: 95vh; }
+.modal-card-560 { width: 560px; }
+
+/* ─── Headers de modales ─── */
+.modal-card-head-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-card-head-gradient .modal-card-title { color: white; }
+.modal-card-head-gradient .delete { background: rgba(255,255,255,0.2); }
+.modal-card-head-detalle-clase {
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.modal-card-title-lg {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.modal-card-body-scroll {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+.modal-card-body-flex {
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-card-foot-border {
+  border-top: 1px solid #dbdbdb;
+  padding-top: 1rem;
+}
+
+/* ─── Footers de modales ─── */
+.modal-card-foot-finalizar {
+  padding: 1.25rem 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+.btn-cancelar {
+  border-radius: 6px;
+}
+.btn-finalizar {
+  background: linear-gradient(135deg, #48c774 0%, #3aa06d 100%);
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.6rem 1.75rem;
+  color: white;
+}
+
+/* ═══════════════════════════════════════════
+   MODAL FINALIZAR CLASE — Tags seleccionables
+   ═══════════════════════════════════════════ */
+.tag-selectable {
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.tag-selected-purple {
+  background: #667eea !important;
+  color: white !important;
+}
+.tag-selected-green {
+  background: #48c774 !important;
+  color: white !important;
+}
+.tag-selected-red {
+  background: #f14668 !important;
+  color: white !important;
+}
+.tag-unselected {
+  background: #f0f0f0 !important;
+  color: #333 !important;
+}
+
+/* ─── Botones de nivel (bajo/medio/alto) ─── */
+.nivel-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nivel-btn-bajo { background: #f14668; color: white; }
+.nivel-btn-medio { background: #ffdd57; color: #333; }
+.nivel-btn-alto { background: #48c774; color: white; }
+.nivel-btn-unselected { background: #f0f0f0; color: #999; }
+
+/* ─── Tarjetas de sección (Información, Resumen, etc.) ─── */
+.section-card {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid;
+}
+.section-card-info {
+  background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+  border-color: #e8ecff;
+}
+.section-card-resumen {
+  background: linear-gradient(135deg, #fffaf0 0%, #fff5e8 100%);
+  border-color: #ffe8cc;
+}
+.section-card-dificultades {
+  background: linear-gradient(135deg, #fdf6f9 0%, #fef0f5 100%);
+  border-color: #ffccdd;
+}
+.section-card-tareas {
+  background: linear-gradient(135deg, #f0fdf4 0%, #e8fdf0 100%);
+  border-color: #ccffdd;
+}
+.section-card-evidencias {
+  background: linear-gradient(135deg, #f0f4ff 0%, #f0f7ff 100%);
+  border-color: #e8f1ff;
+}
+
+/* ─── Títulos de sección ─── */
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.section-title-blue { color: #667eea; }
+.section-title-orange { color: #ff8c00; }
+.section-title-pink { color: #f14668; }
+.section-title-green { color: #48c774; }
+
+/* ─── Labels y textarea ─── */
+.finalizar-label { color: #333; }
+.finalizar-textarea {
+  border-radius: 6px;
+  border-color: #ffe8cc;
+}
+
+/* ─── Botón agregar tarea ─── */
+.finalizar-add-btn {
+  background: #48c774;
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* ─── Input de nueva tarea ─── */
+.finalizar-task-input {
+  border-color: #ccffdd;
+  border-radius: 6px;
+  padding-left: 1rem;
+}
+
+/* ─── Grid de tareas ─── */
+.finalizar-tareas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+.finalizar-tarea-card {
+  padding: 0.9rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.finalizar-tarea-card-pending {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff5e8 100%);
+  border: 2px solid #ffb365;
+}
+.finalizar-tarea-card-completed {
+  background: linear-gradient(135deg, #e8f9f0 0%, #dcf5e8 100%);
+  border: 2px solid #48c774;
+}
+.finalizar-tarea-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.finalizar-tarea-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex: 1;
+  cursor: pointer;
+  margin: 0;
+}
+.finalizar-tarea-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  word-break: break-word;
+  flex: 1;
+}
+.finalizar-tarea-text-done {
+  text-decoration: line-through;
+  color: #777;
+}
+.finalizar-tarea-text-pending {
+  color: #333;
+}
+.finalizar-tarea-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+.finalizar-tarea-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+}
+.finalizar-tarea-status-done { background: #48c774; }
+.finalizar-tarea-status-pending { background: #ffb365; }
+.finalizar-tarea-delete {
+  background: rgba(241, 70, 104, 0.1);
+  width: 24px;
+  height: 24px;
+}
+
+/* ─── Grid de evidencias ─── */
+.finalizar-evidencias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.75rem;
+}
+.finalizar-evidencia-item {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+.finalizar-evidencia-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #e8f1ff;
+}
+.finalizar-evidencia-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #f14668 !important;
+}
+.finalizar-file-box {
+  border-color: #e8f1ff;
+}
+
+/* ═══════════════════════════════════════════
+   MODAL DETALLE ALUMNO — Timeline
+   ═══════════════════════════════════════════ */
+.timeline-custom {
+  position: relative;
+  padding-left: 24px;
+}
+.timeline-item {
+  border-left: 2px solid #667eea;
+  padding: 0 0 16px 16px;
+  margin-left: 0;
+  position: relative;
+}
+.timeline-dot {
+  position: absolute;
+  left: -8px;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  background: #667eea;
+  border-radius: 14px;
+}
+
+/* ═══════════════════════════════════════════
+   MODAL DETALLE CLASE — Cuadros informativos
+   ═══════════════════════════════════════════ */
+.detail-box {
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+.detail-box-materia {
+  background: #eef5ff;
+  border-left: 3px solid #667eea;
+}
+.detail-box-temas {
+  background: #f0faf7;
+  border-left: 3px solid #48c774;
+}
+.detail-box-resumen {
+  background: #fffbf0;
+  border-left: 3px solid #ffdd57;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.detail-box-dificultades {
+  background: #fdf6f9;
+  border-left: 3px solid #f14668;
+}
+.detail-text-lineheight {
+  line-height: 1.6;
+}
+.detail-section-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ─── Nivel de avance (bordes dinámicos en tsx) ─── */
+.detail-nivel-box-alto {
+  border-left: 4px solid #48c774;
+  background: #f0fdf4;
+}
+.detail-nivel-box-medio {
+  border-left: 4px solid #ffdd57;
+  background: #fffbf0;
+}
+.detail-nivel-box-bajo {
+  border-left: 4px solid #f14668;
+  background: #fdf6f9;
+}
+
+/* ─── Tareas para casa ─── */
+.detail-tareas-section {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #f5f9ff 0%, #f0f7ff 100%);
+  border-radius: 8px;
+  border: 2px solid #e8f1ff;
+}
+.detail-tareas-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f5aa8;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.detail-tareas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.detail-tarea-card {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+}
+.detail-tarea-card-pending {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff5e8 100%);
+  border-left: 4px solid #ffb365;
+}
+.detail-tarea-card-completed {
+  background: linear-gradient(135deg, #f0fdf4 0%, #e8f9f0 100%);
+  border-left: 4px solid #48c774;
+}
+.detail-tarea-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.detail-tarea-text {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.detail-tarea-text-done {
+  text-decoration: line-through;
+  color: #999;
+}
+.detail-tarea-text-pending {
+  color: #333;
+}
+.detail-tarea-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+.detail-tarea-badge-done { background: #48c774; }
+.detail-tarea-badge-pending { background: #ffb365; }
+
+/* ─── Evidencias ─── */
+.detail-evidencias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+.detail-evidencia-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.detail-evidencia-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.detail-evidencia-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+.detail-evidencia-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.detail-evidencia-overlay:hover { opacity: 1; }
+.detail-evidencia-icon {
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════
+   MODAL EDITAR / NUEVO ALUMNO
+   ═══════════════════════════════════════════ */
+.edit-section {
+  padding: 1.25rem;
+  background: #fafbfc;
+  border-radius: 10px;
+  border: 1px solid #eef0f2;
+  margin-bottom: 1.25rem;
+}
+.edit-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #667eea;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eef0f2;
+}
+.btn-edit-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.6rem 1.75rem;
+  color: white;
+}
+.btn-edit-submit:hover {
+  opacity: 0.9;
+  color: white;
+}
+.btn-edit-danger {
+  border-radius: 6px;
+}
+.edit-input {
+  border-radius: 6px;
+}
+.edit-textarea {
+  border-radius: 6px;
+}
+.edit-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #555;
 }

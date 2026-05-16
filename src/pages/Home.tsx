@@ -2,6 +2,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
+/* ─── Props del componente ─── */
 interface HomeProps {
   userData: {
     uid: string;
@@ -11,9 +12,13 @@ interface HomeProps {
   };
 }
 
+/* ═══════════════════════════════════════════
+   COMPONENTE: Home — Página principal
+   ═══════════════════════════════════════════ */
 function Home({ userData }: HomeProps) {
   const navigate = useNavigate();
 
+  /* ─── Cerrar sesión ─── */
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -25,6 +30,7 @@ function Home({ userData }: HomeProps) {
 
   return (
     <div className="home-wrapper">
+      {/* ═══ Barra de navegación ═══ */}
       <nav className="navbar is-white" role="navigation">
         <div className="container">
           <div className="navbar-brand">
@@ -48,9 +54,11 @@ function Home({ userData }: HomeProps) {
         </div>
       </nav>
 
+      {/* ═══ Panel principal ═══ */}
       <section className="section">
         <div className="container">
           <div className="columns">
+            {/* ─── Columna izquierda: tarjetas de funcionalidades ─── */}
             <div className="column is-8">
               <div className="box">
                 <h2 className="title is-4">Bienvenido a tu Panel</h2>
@@ -59,6 +67,7 @@ function Home({ userData }: HomeProps) {
                 </p>
 
                 <div className="columns is-multiline mt-4">
+                  {/* Tarjeta: Materias */}
                   <div className="column is-4">
                     <div className="card feature-card">
                       <div className="card-content has-text-centered">
@@ -82,10 +91,10 @@ function Home({ userData }: HomeProps) {
                     </div>
                   </div>
 
+                  {/* Tarjeta: Alumnos (navega a /alumnos) */}
                   <div
-                    className="column is-4"
+                    className="column is-4 cursor-pointer"
                     onClick={() => navigate("/alumnos")}
-                    style={{ cursor: "pointer" }}
                   >
                     <div className="card feature-card">
                       <div className="card-content has-text-centered">
@@ -107,6 +116,7 @@ function Home({ userData }: HomeProps) {
                     </div>
                   </div>
 
+                  {/* Tarjeta: Horarios */}
                   <div className="column is-4">
                     <div className="card feature-card">
                       <div className="card-content has-text-centered">
@@ -129,6 +139,8 @@ function Home({ userData }: HomeProps) {
                       </div>
                     </div>
                   </div>
+
+                  {/* Tarjeta: Planificación */}
                   <div className="column is-4">
                     <div className="card feature-card">
                       <div className="card-content has-text-centered">
@@ -154,6 +166,8 @@ function Home({ userData }: HomeProps) {
                 </div>
               </div>
             </div>
+
+            {/* ─── Columna derecha: información ─── */}
             <div className="column is-4">
               <div className="box">
                 <h3 className="title is-5">Información</h3>

@@ -19,6 +19,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import MATERIAS from "../data/materias.json";
 import TEMAS_POR_DEFECTO from "../data/temas.json";
 
+/* ─── Emojis de animales para asignar a cada alumno ─── */
 const ANIMALS = [
   { emoji: "🐶", name: "Perro" },
   { emoji: "🐱", name: "Gato" },
@@ -38,6 +39,7 @@ const ANIMALS = [
   { emoji: "🐝", name: "Abeja" },
 ];
 
+/* ─── Tipos ─── */
 interface Tema {
   materia: string;
   nombre: string;
@@ -89,6 +91,9 @@ const defaultForm = {
 };
 type FormAlumno = typeof defaultForm;
 
+/* ═══════════════════════════════════════════
+   COMPONENTE PRINCIPAL: Alumnos
+   ═══════════════════════════════════════════ */
 function Alumnos() {
   const navigate = useNavigate();
   const [alumnos, setAlumnos] = useState<Alumno[]>([]);
@@ -106,6 +111,9 @@ function Alumnos() {
   >("info");
   const [historial, setHistorial] = useState<HistorialEntry[]>([]);
   const [historialLoading, setHistorialLoading] = useState(false);
+  const [detalleClaseSeleccionada, setDetalleClaseSeleccionada] =
+    useState<HistorialEntry | null>(null);
+  const [claseIndex, setClaseIndex] = useState(0);
 
   const [finalizarAlumno, setFinalizarAlumno] = useState<Alumno | null>(null);
   const [finalizarMateria, setFinalizarMateria] = useState("");
@@ -124,6 +132,7 @@ function Alumnos() {
   const [finalizarArchivos, setFinalizarArchivos] = useState<string[]>([]);
   const [finalizarSubiendo, setFinalizarSubiendo] = useState(false);
 
+  /* ─── Lista fija de dificultades de aprendizaje ─── */
   const DIFICULTADES = [
     "concentración",
     "lectura",
@@ -134,12 +143,14 @@ function Alumnos() {
     "motricidad",
   ];
 
+  /* ─── Efecto: cerrar picker de animal al hacer clic fuera ─── */
   useEffect(() => {
     const handleClick = () => setAnimalPickerFor(null);
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
+  /* ─── Efecto: escuchar cambios en la colección "alumnos" ─── */
   useEffect(() => {
     const q = query(collection(db, "alumnos"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (snapshot) => {
@@ -155,6 +166,7 @@ function Alumnos() {
     return () => unsub();
   }, []);
 
+  /* ─── Efecto: escuchar historial del alumno seleccionado ─── */
   useEffect(() => {
     if (!detalleAlumno) return;
     setHistorialLoading(true);
@@ -170,6 +182,8 @@ function Alumnos() {
     });
     return () => unsub();
   }, [detalleAlumno?.id]);
+
+  /* ─── Handlers ─── */
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -370,6 +384,7 @@ function Alumnos() {
 
   return (
     <div className="home-wrapper">
+      {/* ═══ Barra de navegación superior ═══ */}
       <nav className="navbar is-white" role="navigation">
         <div className="container">
           <div className="navbar-brand">
@@ -398,8 +413,10 @@ function Alumnos() {
         </div>
       </nav>
 
+      {/* ═══ Contenido principal ═══ */}
       <section className="section">
         <div className="container">
+          {/* ─── Encabezado: título + botones ─── */}
           <div className="level mb-4">
             <div className="level-left">
               <div>
@@ -416,7 +433,7 @@ function Alumnos() {
                   <input
                     type="file"
                     accept=".csv"
-                    style={{ display: "none" }}
+                    className="d-none"
                     onChange={importCSV}
                   />
                 </label>
@@ -436,6 +453,7 @@ function Alumnos() {
             </div>
           </div>
 
+          {/* ─── Buscador ─── */}
           <div className="field mb-4">
             <div className="control has-icons-left">
               <input
@@ -457,6 +475,7 @@ function Alumnos() {
             </div>
           </div>
 
+          {/* ─── Lista de alumnos ─── */}
           {loading ? (
             <div className="has-text-centered py-6">
               <p className="has-text-grey">Cargando alumnos...</p>
@@ -471,15 +490,21 @@ function Alumnos() {
             <div className="columns is-multiline">
               {filtered.map((a) => (
                 <div className="column is-4" key={a.id}>
-                  <div className="card alumno-card">
+                  <div
+                    className="card alumno-card"
+                    onClick={() => {
+                      setDetalleAlumno(a);
+                      setDetalleTab("info");
+                    }}
+                  >
                     <div className="card-content">
+                      {/* ─── Estado + Curso ─── */}
                       <div className="level is-mobile mb-2">
                         <div className="level-left">
                           <div className="tags">
                             <span
-                              className={`tag ${a.activo ? "is-success" : "is-light"}`}
+                              className={`tag ${a.activo ? "is-success" : "is-light"} cursor-pointer`}
                               onClick={() => toggleActivo(a)}
-                              style={{ cursor: "pointer" }}
                             >
                               {a.activo ? "Activo" : "Inactivo"}
                             </span>
@@ -492,67 +517,34 @@ function Alumnos() {
                         </div>
                       </div>
 
+                      {/* ─── Avatar / Animal ─── */}
                       <div className="has-text-centered mb-3">
                         <div
-                          className="is-relative"
-                          style={{ display: "inline-block" }}
+                          className="is-relative d-inline-block"
                         >
                           <span
-                            className="is-flex is-align-items-center is-justify-content-center animal-icon"
+                            className="animal-avatar"
                             onClick={(e) => {
                               e.stopPropagation();
                               setAnimalPickerFor(
                                 animalPickerFor === a.id ? null : a.id,
                               );
                             }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              fontSize: 32,
-                              borderRadius: 64,
-                              margin: "0 auto 0.5rem",
-                              cursor: "pointer",
-                              background: "#f0f4ff",
-                              border: "2px solid #e2e8f0",
-                            }}
                           >
                             {a.animal || randomAnimal()}
                           </span>
                           {animalPickerFor === a.id && (
                             <div
-                              className="box p-2"
+                              className="box p-2 animal-picker-popup"
                               onClick={(e) => e.stopPropagation()}
-                              style={{
-                                position: "absolute",
-                                top: "100%",
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                                zIndex: 10,
-                                width: 208,
-                              }}
                             >
                               <div
-                                style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "repeat(4, 1fr)",
-                                  gap: 4,
-                                }}
+                                className="animal-picker-grid"
                               >
                                 {ANIMALS.map((animal) => (
                                   <span
                                     key={animal.emoji}
-                                    className="is-flex is-align-items-center is-justify-content-center"
-                                    style={{
-                                      width: 44,
-                                      height: 44,
-                                      fontSize: 22,
-                                      cursor: "pointer",
-                                      borderRadius: 8,
-                                      background:
-                                        a.animal === animal.emoji
-                                          ? "#667eea"
-                                          : "transparent",
-                                    }}
+                                    className={`animal-option ${a.animal === animal.emoji ? "animal-option-selected" : "animal-option-default"}`}
                                     onClick={async () => {
                                       await updateDoc(
                                         doc(db, "alumnos", a.id),
@@ -581,6 +573,7 @@ function Alumnos() {
                         <p className="has-text-weight-semibold">{a.nombre}</p>
                       </div>
 
+                      {/* ─── Información del alumno ─── */}
                       <div className="content is-size-7">
                         <p className="mb-1">
                           <span className="has-text-grey">Edad:</span>{" "}
@@ -613,32 +606,21 @@ function Alumnos() {
                           </div>
                         )}
 
-                        <div
-                          style={{
-                            height: 4,
-                            background: "#e2e8f0",
-                            borderRadius: 4,
-                          }}
-                        >
+                        {/* ─── Barra de progreso ─── */}
+                        <div className="progress-track">
                           <div
-                            style={{
-                              width: `${calcProgreso(a)}%`,
-                              height: 4,
-                              background:
-                                "linear-gradient(90deg, #667eea, #764ba2)",
-                              borderRadius: 4,
-                              transition: "width 0.5s",
-                            }}
+                            className="progress-fill"
+                            style={{ width: `${calcProgreso(a)}%` }}
                           />
                         </div>
                         <p
-                          className="has-text-grey mt-1"
-                          style={{ fontSize: 11 }}
+                          className="has-text-grey mt-1 fs-11"
                         >
                           Progreso: {calcProgreso(a)}%
                         </p>
                       </div>
 
+                      {/* ─── Acciones ─── */}
                       <div className="buttons are-small is-centered mt-3">
                         <button
                           className="button is-info is-light"
@@ -659,7 +641,12 @@ function Alumnos() {
                             setFinalizarResumen("");
                             setFinalizarDificultades([]);
                             setFinalizarNivel("medio");
-                            setFinalizarTareas((a.tareasPendientes || []).map((t) => ({ nombre: t.nombre, completado: false })));
+                            setFinalizarTareas(
+                              (a.tareasPendientes || []).map((t) => ({
+                                nombre: t.nombre,
+                                completado: false,
+                              })),
+                            );
                             setFinalizarNuevaTarea("");
                             setFinalizarArchivos([]);
                           }}
@@ -668,15 +655,12 @@ function Alumnos() {
                         </button>
                         <button
                           className="button is-info is-light"
-                          onClick={() => openEdit(a)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openEdit(a);
+                          }}
                         >
                           Editar
-                        </button>
-                        <button
-                          className="button is-danger is-light"
-                          onClick={() => handleDelete(a.id)}
-                        >
-                          Eliminar
                         </button>
                       </div>
                     </div>
@@ -688,14 +672,14 @@ function Alumnos() {
         </div>
       </section>
 
-      {/* Detail Modal */}
+      {/* ═══ MODAL: Detalle del Alumno ═══ */}
       {detalleAlumno && (
         <div className="modal is-active">
           <div
             className="modal-background"
             onClick={() => setDetalleAlumno(null)}
           ></div>
-          <div className="modal-card" style={{ width: 640 }}>
+          <div className="modal-card modal-card-640">
             <header className="modal-card-head">
               <p className="modal-card-title">{detalleAlumno.nombre}</p>
               <button
@@ -703,7 +687,8 @@ function Alumnos() {
                 onClick={() => setDetalleAlumno(null)}
               ></button>
             </header>
-            <section className="modal-card-body" style={{ minHeight: 300 }}>
+            <section className="modal-card-body minh-300">
+              {/* ─── Pestañas: Info / Historial / Progreso ─── */}
               <div className="tabs is-boxed mb-4">
                 <ul>
                   <li className={detalleTab === "info" ? "is-active" : ""}>
@@ -720,6 +705,7 @@ function Alumnos() {
                 </ul>
               </div>
 
+              {/* ─── Pestaña: Información ─── */}
               {detalleTab === "info" && (
                 <div className="content">
                   <div className="columns is-variable is-6">
@@ -805,6 +791,7 @@ function Alumnos() {
                 </div>
               )}
 
+              {/* ─── Pestaña: Historial ─── */}
               {detalleTab === "historial" && (
                 <div>
                   {historialLoading ? (
@@ -813,47 +800,58 @@ function Alumnos() {
                     <p className="has-text-grey">Sin eventos registrados</p>
                   ) : (
                     <div
-                      className="timeline"
-                      style={{ position: "relative", paddingLeft: 24 }}
+                      className="timeline-custom"
                     >
-                      {historial.map((h) => (
-                        <div
-                          key={h.id}
-                          style={{
-                            borderLeft: "2px solid #667eea",
-                            padding: "0 0 16px 16px",
-                            marginLeft: 0,
-                            position: "relative",
-                          }}
-                        >
-                          <span
-                            style={{
-                              position: "absolute",
-                              left: -8,
-                              top: 0,
-                              width: 14,
-                              height: 14,
-                              background: "#667eea",
-                              borderRadius: 14,
-                            }}
-                          />
-                          <p
-                            className="has-text-weight-semibold is-size-7"
-                            style={{ textTransform: "capitalize" }}
+                      {historial.map((h, index) => {
+                        let tipoDisplay = h.tipo;
+                        if (h.tipo === "clase") {
+                          const clasesDesdeAqui = historial
+                            .slice(index)
+                            .filter((item) => item.tipo === "clase").length;
+                          tipoDisplay = `clase ${clasesDesdeAqui}`;
+                        }
+                        return (
+                          <div
+                            key={h.id}
+                            className="timeline-item"
                           >
-                            {h.tipo}
-                          </p>
-                          <p className="is-size-7">{h.detalle}</p>
-                          <p className="is-size-7 has-text-grey">
-                            {h.fecha?.toDate().toLocaleString() || ""}
-                          </p>
-                        </div>
-                      ))}
+                            <span
+                              className="timeline-dot"
+                            />
+                            <p
+                              className="has-text-weight-semibold is-size-7 text-capitalize"
+                            >
+                              {tipoDisplay}
+                            </p>
+                            <p className="is-size-7">{h.detalle}</p>
+                            <p className="is-size-7 has-text-grey">
+                              {h.fecha?.toDate().toLocaleString() || ""}
+                            </p>
+                            {h.tipo === "clase" && (
+                              <button
+                                className="button is-small is-info is-light mt-2"
+                                onClick={() => {
+                                  const clasesDesdeAqui = historial
+                                    .slice(index)
+                                    .filter(
+                                      (item) => item.tipo === "clase",
+                                    ).length;
+                                  setClaseIndex(clasesDesdeAqui);
+                                  setDetalleClaseSeleccionada(h);
+                                }}
+                              >
+                                Ver detalles
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
               )}
 
+              {/* ─── Pestaña: Progreso ─── */}
               {detalleTab === "progreso" && (
                 <div>
                   <p className="has-text-weight-semibold mb-3">
@@ -954,19 +952,14 @@ function Alumnos() {
                             </div>
                           </div>
                           <div
-                            style={{
-                              height: 6,
-                              background: "#e2e8f0",
-                              borderRadius: 6,
-                            }}
+                            className="progress-indicator"
                           >
                             <div
+                              className="progress-fill"
                               style={{
                                 width: `${item.pct}%`,
-                                height: 6,
                                 background:
                                   item.pct === 100 ? "#48c774" : "#ffdd57",
-                                borderRadius: 6,
                               }}
                             />
                           </div>
@@ -1005,8 +998,7 @@ function Alumnos() {
                                 −
                               </button>
                               <button
-                                className="button is-small is-static"
-                                style={{ minWidth: 32 }}
+                                className="button is-small is-static minw-32"
                               >
                                 {detalleAlumno.clasesTotales || 0}
                               </button>
@@ -1053,8 +1045,7 @@ function Alumnos() {
                                 −
                               </button>
                               <button
-                                className="button is-small is-static"
-                                style={{ minWidth: 32 }}
+                                className="button is-small is-static minw-32"
                               >
                                 {detalleAlumno.clasesCompletadas || 0}
                               </button>
@@ -1080,22 +1071,11 @@ function Alumnos() {
                         </div>
                       </div>
                     </div>
-                    <div
-                      style={{
-                        height: 8,
-                        background: "#e2e8f0",
-                        borderRadius: 8,
-                        marginTop: 8,
-                      }}
-                    >
+                    <div className="progress-lg progress-track mt-8">
                       <div
+                        className="progress-fill progress-fill-green"
                         style={{
                           width: `${detalleAlumno.clasesTotales > 0 ? Math.round((detalleAlumno.clasesCompletadas / detalleAlumno.clasesTotales) * 100) : 0}%`,
-                          height: 8,
-                          background:
-                            "linear-gradient(90deg, #48c774, #2ecc71)",
-                          borderRadius: 8,
-                          transition: "width 0.5s",
                         }}
                       />
                     </div>
@@ -1112,176 +1092,6 @@ function Alumnos() {
                       %)
                     </p>
                   </div>
-
-                  <hr />
-                  <p className="has-text-weight-semibold mb-3">
-                    Materias y Temas
-                  </p>
-                  {detalleAlumno.materias?.length > 0 ? (
-                    detalleAlumno.materias.map((materia) => {
-                      const temasMateria = (detalleAlumno.temas || []).filter(
-                        (t: Tema) => t.materia === materia,
-                      );
-                      const completados = temasMateria.filter(
-                        (t: Tema) => t.completado,
-                      ).length;
-                      const pct =
-                        temasMateria.length > 0
-                          ? Math.round(
-                              (completados / temasMateria.length) * 100,
-                            )
-                          : 0;
-                      return (
-                        <details
-                          key={materia}
-                          className="mb-3"
-                          style={{ cursor: "pointer" }}
-                        >
-                          <summary
-                            className="has-text-weight-semibold is-size-7 mb-1"
-                            style={{ cursor: "pointer" }}
-                          >
-                            {materia}{" "}
-                            <span className="tag is-small is-light">
-                              {completados}/{temasMateria.length}
-                            </span>
-                          </summary>
-                          <div
-                            className="box p-2 ml-3"
-                            style={{ cursor: "default" }}
-                          >
-                            {temasMateria.length > 0 && (
-                              <div
-                                style={{
-                                  height: 4,
-                                  background: "#e2e8f0",
-                                  borderRadius: 4,
-                                  marginBottom: 8,
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    width: `${pct}%`,
-                                    height: 4,
-                                    background:
-                                      pct === 100 ? "#48c774" : "#ffdd57",
-                                    borderRadius: 4,
-                                  }}
-                                />
-                              </div>
-                            )}
-                            {temasMateria.map((tema: Tema) => (
-                              <div
-                                key={tema.nombre}
-                                className="level is-mobile mb-1"
-                              >
-                                <div className="level-left">
-                                  <label
-                                    className="checkbox is-size-7"
-                                    style={{ cursor: "pointer" }}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={tema.completado}
-                                      className="mr-2"
-                                      onChange={async () => {
-                                        const nuevosTemas = (
-                                          detalleAlumno.temas || []
-                                        ).map((t: Tema) =>
-                                          t.materia === materia &&
-                                          t.nombre === tema.nombre
-                                            ? {
-                                                ...t,
-                                                completado: !t.completado,
-                                              }
-                                            : t,
-                                        );
-                                        await updateDoc(
-                                          doc(db, "alumnos", detalleAlumno.id),
-                                          { temas: nuevosTemas },
-                                        );
-                                      }}
-                                    />
-                                    {tema.nombre}
-                                  </label>
-                                </div>
-                                <div className="level-right">
-                                  <button
-                                    className="delete is-small"
-                                    onClick={async (e) => {
-                                      e.stopPropagation();
-                                      const nuevosTemas = (
-                                        detalleAlumno.temas || []
-                                      ).filter(
-                                        (t: Tema) =>
-                                          !(
-                                            t.materia === materia &&
-                                            t.nombre === tema.nombre
-                                          ),
-                                      );
-                                      await updateDoc(
-                                        doc(db, "alumnos", detalleAlumno.id),
-                                        { temas: nuevosTemas },
-                                      );
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                            <div className="field has-addons mt-2">
-                              <div className="control is-expanded">
-                                <input
-                                  className="input is-small"
-                                  placeholder="Nuevo tema..."
-                                  id={`nuevoTema-${materia}`}
-                                />
-                              </div>
-                              <div className="control">
-                                <button
-                                  className="button is-small is-success"
-                                  type="button"
-                                  onClick={async () => {
-                                    const input = document.getElementById(
-                                      `nuevoTema-${materia}`,
-                                    ) as HTMLInputElement;
-                                    const val = input.value.trim();
-                                    if (
-                                      val &&
-                                      !(detalleAlumno.temas || []).some(
-                                        (t: Tema) =>
-                                          t.materia === materia &&
-                                          t.nombre === val,
-                                      )
-                                    ) {
-                                      const nuevosTemas = [
-                                        ...(detalleAlumno.temas || []),
-                                        {
-                                          materia,
-                                          nombre: val,
-                                          completado: false,
-                                        },
-                                      ];
-                                      await updateDoc(
-                                        doc(db, "alumnos", detalleAlumno.id),
-                                        { temas: nuevosTemas },
-                                      );
-                                      input.value = "";
-                                    }
-                                  }}
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </details>
-                      );
-                    })
-                  ) : (
-                    <p className="is-size-7 has-text-grey">
-                      Sin materias asignadas.
-                    </p>
-                  )}
                 </div>
               )}
             </section>
@@ -1294,74 +1104,418 @@ function Alumnos() {
         </div>
       )}
 
-      {/* Finalizar Clase Modal */}
+      {/* ═══ MODAL: Detalle de la Clase ═══ */}
+      {detalleClaseSeleccionada && (
+        <div className="modal is-active">
+          <div
+            className="modal-background"
+            onClick={() => setDetalleClaseSeleccionada(null)}
+          ></div>
+          <div
+            className="modal-card modal-card-720"
+          >
+            <header
+              className="modal-card-head modal-card-head-detalle-clase"
+            >
+              <div>
+                <p
+                  className="modal-card-title modal-card-title-lg"
+                >
+                  📚 Clase {claseIndex}
+                </p>
+                <p className="is-size-7 has-text-grey">
+                  {detalleClaseSeleccionada.fecha
+                    ?.toDate()
+                    .toLocaleDateString("es-CL", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }) || ""}
+                </p>
+              </div>
+              <button
+                className="delete flex-shrink-0"
+                onClick={() => setDetalleClaseSeleccionada(null)}
+              ></button>
+            </header>
+            <section
+              className="modal-card-body modal-card-body-flex"
+            >
+              {detalleClaseSeleccionada.tipo === "clase" && (
+                <div>
+                  {/* Nivel de avance */}
+                  {(detalleClaseSeleccionada as any).nivel && (
+                    <div
+                      className="box"
+                      style={{
+                        borderLeft: `4px solid ${(detalleClaseSeleccionada as any).nivel === "alto" ? "#48c774" : (detalleClaseSeleccionada as any).nivel === "medio" ? "#ffdd57" : "#f14668"}`,
+                        background: `${(detalleClaseSeleccionada as any).nivel === "alto" ? "#f0fdf4" : (detalleClaseSeleccionada as any).nivel === "medio" ? "#fffbf0" : "#fdf6f9"}`,
+                      }}
+                    >
+                      <div className="level is-mobile">
+                        <div className="level-left">
+                          <div>
+                            <p className="has-text-weight-semibold">
+                              Nivel de Avance
+                            </p>
+                            <p className="is-size-7 has-text-grey">
+                              Progreso en la clase
+                            </p>
+                          </div>
+                        </div>
+                        <div className="level-right">
+                          <span
+                            className={`tag is-large ${
+                              (detalleClaseSeleccionada as any).nivel === "alto"
+                                ? "is-success"
+                                : (detalleClaseSeleccionada as any).nivel ===
+                                    "medio"
+                                  ? "is-warning"
+                                  : "is-danger"
+                            }`}
+                          >
+                            {(detalleClaseSeleccionada as any).nivel === "alto"
+                              ? "🚀 Alto"
+                              : (detalleClaseSeleccionada as any).nivel ===
+                                  "medio"
+                                ? "📈 Medio"
+                                : "⏱️ Bajo"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Información general */}
+                  <div className="box mt-4">
+                    <p className="has-text-weight-semibold mb-4">
+                      📋 Detalles de la Clase
+                    </p>
+                    <div
+                      className="detail-section-flex"
+                    >
+                      {(() => {
+                        const detalle = detalleClaseSeleccionada.detalle || "";
+                        const lines = detalle.split("\n");
+                        const details: Record<string, string> = {};
+
+                        lines.forEach((line) => {
+                          const match = line.match(/^([^:]+):\s*(.*)$/);
+                          if (match) {
+                            details[match[1].trim()] = match[2].trim();
+                          }
+                        });
+
+                        return (
+                          <>
+                            {/* Materia */}
+                            {details["Materia"] && (
+                              <div>
+                                <p className="is-size-7 has-text-weight-semibold has-text-primary mb-2">
+                                  📚 Materia
+                                </p>
+                                <div
+                                  className="detail-box detail-box-materia"
+                                >
+                                  <p className="is-size-7">
+                                    {details["Materia"]}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Temas */}
+                            {details["Temas"] && (
+                              <div>
+                                <p className="is-size-7 has-text-weight-semibold has-text-info mb-2">
+                                  🎯 Temas Cubiertos
+                                </p>
+                                <div
+                                  className="detail-box detail-box-temas"
+                                >
+                                  <p className="is-size-7">
+                                    {details["Temas"]}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Resumen */}
+                            {details["Resumen"] && (
+                              <div>
+                                <p className="is-size-7 has-text-weight-semibold has-text-warning mb-2">
+                                  📝 Resumen de la Sesión
+                                </p>
+                                <div
+                                  className="detail-box detail-box-resumen"
+                                >
+                                  <p
+                                    className="is-size-5 detail-text-lineheight"
+                                  >
+                                    {details["Resumen"]}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Dificultades */}
+                            {details["Dificultades"] &&
+                              details["Dificultades"] !== "—" && (
+                                <div>
+                                  <p className="is-size-7 has-text-weight-semibold has-text-danger mb-2">
+                                    ⚠️ Dificultades Detectadas
+                                  </p>
+                                  <div
+                                    className="detail-box detail-box-dificultades"
+                                  >
+                                    <div className="tags">
+                                      {details["Dificultades"]
+                                        .split(",")
+                                        .map((d, i) => (
+                                          <span
+                                            key={i}
+                                            className="tag is-danger is-light"
+                                          >
+                                            {d.trim()}
+                                          </span>
+                                        ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Tareas */}
+                  {(detalleClaseSeleccionada as any).tareas &&
+                    (detalleClaseSeleccionada as any).tareas.length > 0 && (
+                      <div
+                        className="detail-tareas-section"
+                      >
+                        <p
+                          className="detail-tareas-title"
+                        >
+                          📋 Tareas para Casa
+                        </p>
+                        <div
+                          className="detail-tareas-grid"
+                        >
+                          {(detalleClaseSeleccionada as any).tareas.map(
+                            (
+                              t: { nombre: string; completado: boolean },
+                              i: number,
+                            ) => (
+                              <div
+                                key={i}
+                                className={`detail-tarea-card ${t.completado ? "detail-tarea-card-completed" : "detail-tarea-card-pending"}`}
+                              >
+                                <span
+                                  className="detail-tarea-icon"
+                                >
+                                  {t.completado ? "✅" : "⭕"}
+                                </span>
+                                <span
+                                  className={`detail-tarea-text ${t.completado ? "detail-tarea-text-done" : "detail-tarea-text-pending"}`}
+                                >
+                                  {t.nombre}
+                                </span>
+                                <span
+                                  className={`detail-tarea-badge ${t.completado ? "detail-tarea-badge-done" : "detail-tarea-badge-pending"}`}
+                                >
+                                  {t.completado ? "✓" : "→"}
+                                </span>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Evidencias */}
+                  {(detalleClaseSeleccionada as any).archivos &&
+                    (detalleClaseSeleccionada as any).archivos.length > 0 && (
+                      <div className="box mt-4">
+                        <p className="has-text-weight-semibold mb-3">
+                          📸 Evidencias / Archivos (
+                          {(detalleClaseSeleccionada as any).archivos.length})
+                        </p>
+                        <div
+                          className="detail-evidencias-grid"
+                        >
+                          {(detalleClaseSeleccionada as any).archivos.map(
+                            (url: string, i: number) => (
+                              <a
+                                key={i}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="detail-evidencia-link"
+                              >
+                                <img
+                                  src={url}
+                                  alt={`Evidencia ${i + 1}`}
+                                  className="detail-evidencia-img"
+                                />
+                                <div
+                                  className="detail-evidencia-overlay"
+                                >
+                                  <span
+                                    className="detail-evidencia-icon"
+                                  >
+                                    🔗
+                                  </span>
+                                </div>
+                              </a>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              )}
+            </section>
+            <footer
+              className="modal-card-foot modal-card-foot-border"
+            >
+              <button
+                className="button is-fullwidth is-light"
+                onClick={() => setDetalleClaseSeleccionada(null)}
+              >
+                Cerrar
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ MODAL: Finalizar Clase ═══ */}
       {finalizarAlumno && (
         <div className="modal is-active">
           <div
             className="modal-background"
             onClick={() => setFinalizarAlumno(null)}
           />
-          <div className="modal-card" style={{ width: 720 }}>
-            <header className="modal-card-head">
-              <p className="modal-card-title">
-                Finalizar Clase — {finalizarAlumno.nombre}
-              </p>
+          <div className="modal-card modal-card-800">
+            <header
+              className="modal-card-head modal-card-head-gradient"
+            >
+              <div>
+                <p className="modal-card-title">
+                  📚 Finalizar Clase
+                </p>
+                <p
+                  className="finalizar-subtitle"
+                >
+                  {finalizarAlumno.nombre}
+                </p>
+              </div>
               <button
                 className="delete"
                 onClick={() => setFinalizarAlumno(null)}
               />
             </header>
-            <section className="modal-card-body" style={{ padding: "1.5rem" }}>
-              {/* Materia + Temas */}
-              <div className="field">
-                <label className="label is-small">Materia trabajada</label>
-                <div className="tags">
-                  {(finalizarAlumno.materias || []).map((m) => (
-                    <span
-                      key={m}
-                      className={`tag is-medium ${finalizarMateria === m ? "is-success" : "is-light is-outlined"}`}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setFinalizarMateria(finalizarMateria === m ? "" : m);
-                        setFinalizarTemas([]);
-                      }}
-                    >
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {finalizarMateria && (
-                <div className="field">
-                  <label className="label is-small">Temas cubiertos</label>
+            <section
+              className="modal-card-body modal-card-body-scroll"
+            >
+              {/* ─── Sección: Información de la Clase ─── */}
+              <div
+                className="section-card section-card-info"
+              >
+                <p
+                  className="section-title section-title-blue"
+                >
+                  📖 Información de la Clase
+                </p>
+
+                {/* Materia */}
+                <div className="field mb-4">
+                  <label className="label is-small finalizar-label">
+                    Materia trabajada
+                  </label>
                   <div className="tags">
-                    {(finalizarAlumno.temas || [])
-                      .filter((t: Tema) => t.materia === finalizarMateria)
-                      .map((t: Tema) => (
-                        <span
-                          key={t.nombre}
-                          className={`tag ${finalizarTemas.includes(t.nombre) ? "is-success" : "is-light is-outlined"}`}
-                          style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            setFinalizarTemas((prev) =>
-                              prev.includes(t.nombre)
-                                ? prev.filter((x) => x !== t.nombre)
-                                : [...prev, t.nombre],
-                            )
-                          }
-                        >
-                          {t.nombre}
-                        </span>
-                      ))}
+                    {(finalizarAlumno.materias || []).map((m) => (
+                      <span
+                        key={m}
+                        className={`tag is-medium tag-selectable ${finalizarMateria === m ? "tag-selected-purple" : "tag-unselected"}`}
+                        onClick={() => {
+                          setFinalizarMateria(finalizarMateria === m ? "" : m);
+                          setFinalizarTemas([]);
+                        }}
+                      >
+                        {m}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              )}
 
-              {/* Resumen de la sesión */}
-              <div className="field">
-                <label className="label is-small">Resumen de la sesión</label>
+                {/* Temas */}
+                {finalizarMateria && (
+                  <div className="field mb-4">
+                    <label className="label is-small finalizar-label">
+                      Temas cubiertos
+                    </label>
+                    <div className="tags">
+                      {(finalizarAlumno.temas || [])
+                        .filter((t: Tema) => t.materia === finalizarMateria)
+                        .map((t: Tema) => (
+                          <span
+                            key={t.nombre}
+                            className={`tag tag-selectable ${finalizarTemas.includes(t.nombre) ? "tag-selected-green" : "tag-unselected"}`}
+                            onClick={() =>
+                              setFinalizarTemas((prev) =>
+                                prev.includes(t.nombre)
+                                  ? prev.filter((x) => x !== t.nombre)
+                                  : [...prev, t.nombre],
+                              )
+                            }
+                          >
+                            {t.nombre}
+                          </span>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Nivel de Avance */}
+                <div className="field">
+                  <label className="label is-small finalizar-label">
+                    Nivel de Avance
+                  </label>
+                  <div className="buttons has-addons gap-05">
+                    {(["bajo", "medio", "alto"] as const).map((nivel) => (
+                      <button
+                        key={nivel}
+                        className={`nivel-btn ${finalizarNivel === nivel ? `nivel-btn-${nivel}` : "nivel-btn-unselected"}`}
+                        onClick={() => setFinalizarNivel(nivel)}
+                      >
+                        {nivel === "bajo"
+                          ? "🔴 Bajo"
+                          : nivel === "medio"
+                            ? "🟡 Medio"
+                            : "🟢 Alto"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ─── Sección: Resumen de la Sesión ─── */}
+              <div
+                className="section-card section-card-resumen"
+              >
+                <p
+                  className="section-title section-title-orange"
+                >
+                  📝 Resumen de la Sesión
+                </p>
                 <textarea
-                  className="textarea"
+                  className="textarea finalizar-textarea"
                   placeholder="¿Qué se trabajó? Anota lo más importante de la clase..."
                   rows={3}
                   value={finalizarResumen}
@@ -1369,35 +1523,20 @@ function Alumnos() {
                 />
               </div>
 
-              {/* Nivel de avance */}
-              <div className="field">
-                <label className="label is-small">Nivel de avance</label>
-                <div className="buttons has-addons is-small">
-                  {(["bajo", "medio", "alto"] as const).map((nivel) => (
-                    <button
-                      key={nivel}
-                      className={`button is-small ${finalizarNivel === nivel ? "is-success is-selected" : ""}`}
-                      onClick={() => setFinalizarNivel(nivel)}
-                    >
-                      {nivel.charAt(0).toUpperCase() + nivel.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <hr className="my-3" />
-
-              {/* Dificultades detectadas */}
-              <div className="field">
-                <label className="label is-small">
-                  Dificultades detectadas
-                </label>
+              {/* ─── Sección: Dificultades Detectadas ─── */}
+              <div
+                className="section-card section-card-dificultades"
+              >
+                <p
+                  className="section-title section-title-pink"
+                >
+                  ⚠️ Dificultades Detectadas
+                </p>
                 <div className="tags">
                   {DIFICULTADES.map((d) => (
                     <span
                       key={d}
-                      className={`tag is-medium ${finalizarDificultades.includes(d) ? "is-danger" : "is-light is-outlined"}`}
-                      style={{ cursor: "pointer" }}
+                      className={`tag is-medium tag-selectable ${finalizarDificultades.includes(d) ? "tag-selected-red" : "tag-unselected"}`}
                       onClick={() =>
                         setFinalizarDificultades((prev) =>
                           prev.includes(d)
@@ -1412,16 +1551,22 @@ function Alumnos() {
                 </div>
               </div>
 
-              <hr className="my-3" />
-
-              {/* Tareas para casa */}
-              <div className="field">
-                <label className="label is-small">Tareas para casa</label>
-                <div className="field has-addons mb-2">
+              {/* ─── Sección: Tareas para Casa ─── */}
+              <div
+                className="section-card section-card-tareas"
+              >
+                <p
+                  className="section-title section-title-green"
+                >
+                  ✅ Tareas para Casa
+                </p>
+                <div
+                  className="field has-addons mb-4 gap-05"
+                >
                   <div className="control is-expanded">
                     <input
-                      className="input"
-                      placeholder="Agregar tarea..."
+                      className="input finalizar-task-input"
+                      placeholder="Ej: Resolver ejercicios página 45..."
                       value={finalizarNuevaTarea}
                       onChange={(e) => setFinalizarNuevaTarea(e.target.value)}
                       onKeyDown={(e) => {
@@ -1441,7 +1586,7 @@ function Alumnos() {
                   </div>
                   <div className="control">
                     <button
-                      className="button is-success"
+                      className="button finalizar-add-btn"
                       onClick={() => {
                         if (finalizarNuevaTarea.trim()) {
                           setFinalizarTareas((prev) => [
@@ -1455,39 +1600,52 @@ function Alumnos() {
                         }
                       }}
                     >
-                      +
+                      ➕ Agregar
                     </button>
                   </div>
                 </div>
                 {finalizarTareas.length > 0 && (
-                  <div style={{ maxHeight: 150, overflowY: "auto" }}>
+                  <div
+                    className="finalizar-tareas-grid"
+                  >
                     {finalizarTareas.map((t, i) => (
-                      <div key={i} className="level is-mobile mb-1">
-                        <div className="level-left">
-                          <label
-                            className="checkbox is-size-7"
-                            style={{ cursor: "pointer" }}
+                      <div
+                        key={i}
+                        className={`finalizar-tarea-card ${t.completado ? "finalizar-tarea-card-completed" : "finalizar-tarea-card-pending"}`}
+                      >
+                        <label
+                          className="finalizar-tarea-label"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={t.completado}
+                            onChange={() =>
+                              setFinalizarTareas((prev) =>
+                                prev.map((x, j) =>
+                                  j === i
+                                    ? { ...x, completado: !x.completado }
+                                    : x,
+                                ),
+                              )
+                            }
+                            className="finalizar-tarea-checkbox"
+                          />
+                          <span
+                            className={`finalizar-tarea-text ${t.completado ? "finalizar-tarea-text-done" : "finalizar-tarea-text-pending"}`}
                           >
-                            <input
-                              type="checkbox"
-                              checked={t.completado}
-                              className="mr-2"
-                              onChange={() =>
-                                setFinalizarTareas((prev) =>
-                                  prev.map((x, j) =>
-                                    j === i
-                                      ? { ...x, completado: !x.completado }
-                                      : x,
-                                  ),
-                                )
-                              }
-                            />
                             {t.nombre}
-                          </label>
-                        </div>
-                        <div className="level-right">
+                          </span>
+                        </label>
+                        <div
+                          className="finalizar-tarea-footer"
+                        >
+                          <span
+                            className={`finalizar-tarea-status ${t.completado ? "finalizar-tarea-status-done" : "finalizar-tarea-status-pending"}`}
+                          >
+                            {t.completado ? "✓ Hecho" : "⏳ Pendiente"}
+                          </span>
                           <button
-                            className="delete is-small"
+                            className="delete is-small finalizar-tarea-delete"
                             onClick={() =>
                               setFinalizarTareas((prev) =>
                                 prev.filter((_, j) => j !== i),
@@ -1501,35 +1659,31 @@ function Alumnos() {
                 )}
               </div>
 
-              <hr className="my-3" />
-
-              {/* Archivos / evidencias */}
-              <div className="field">
-                <label className="label is-small">Archivos o evidencias</label>
+              {/* ─── Sección: Evidencias ─── */}
+              <div
+                className="section-card section-card-evidencias"
+              >
+                <p
+                  className="section-title section-title-blue"
+                >
+                  📸 Evidencias
+                </p>
                 {finalizarArchivos.length > 0 && (
                   <div
-                    className="mb-2"
-                    style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                    className="mb-3 finalizar-evidencias-grid"
                   >
                     {finalizarArchivos.map((url, i) => (
                       <div
                         key={i}
-                        style={{ position: "relative", width: 72, height: 72 }}
+                        className="finalizar-evidencia-item"
                       >
                         <img
                           src={url}
                           alt=""
-                          style={{
-                            width: 72,
-                            height: 72,
-                            objectFit: "cover",
-                            borderRadius: 8,
-                            border: "1px solid #e2e8f0",
-                          }}
+                          className="finalizar-evidencia-img"
                         />
                         <button
-                          className="delete is-small"
-                          style={{ position: "absolute", top: -4, right: -4 }}
+                          className="delete is-small finalizar-evidencia-delete"
                           onClick={() =>
                             setFinalizarArchivos((prev) =>
                               prev.filter((_, j) => j !== i),
@@ -1540,7 +1694,9 @@ function Alumnos() {
                     ))}
                   </div>
                 )}
-                <div className="file is-small is-boxed is-success">
+                <div
+                  className="file is-boxed finalizar-file-box"
+                >
                   <label className="file-label">
                     <input
                       className="file-input"
@@ -1563,18 +1719,25 @@ function Alumnos() {
                       }}
                     />
                     <span className="file-label">
-                      {finalizarSubiendo ? "Subiendo..." : "Subir foto o PDF"}
+                      {finalizarSubiendo
+                        ? "📤 Subiendo..."
+                        : "📁 Subir foto o PDF"}
                     </span>
                   </label>
                 </div>
               </div>
             </section>
             <footer
-              className="modal-card-foot"
-              style={{ padding: "1rem 1.5rem" }}
+              className="modal-card-foot modal-card-foot-finalizar"
             >
               <button
-                className="button is-fullwidth is-success is-medium"
+                className="button btn-cancelar"
+                onClick={() => setFinalizarAlumno(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn-finalizar"
                 onClick={async () => {
                   const id = finalizarAlumno.id;
                   const materia = finalizarMateria;
@@ -1607,7 +1770,9 @@ function Alumnos() {
                       (finalizarAlumno.clasesCompletadas || 0) + 1,
                     ),
                     dificultades: dificultadesUnidas,
-                    tareasPendientes: finalizarTareas.filter((t) => !t.completado).map((t) => ({ nombre: t.nombre })),
+                    tareasPendientes: finalizarTareas
+                      .filter((t) => !t.completado)
+                      .map((t) => ({ nombre: t.nombre })),
                   });
                   if (materia && finalizarTemas.length > 0) {
                     const nuevosTemas = (finalizarAlumno.temas || []).map(
@@ -1624,150 +1789,162 @@ function Alumnos() {
                   setFinalizarAlumno(null);
                 }}
               >
-                Finalizar Clase
+                ✅ Finalizar Clase
               </button>
             </footer>
           </div>
         </div>
       )}
 
-      {/* Create/Edit Modal */}
+      {/* ═══ MODAL: Crear / Editar Alumno ═══ */}
       {showModal && (
         <div className="modal is-active">
           <div
             className="modal-background"
             onClick={() => setShowModal(false)}
           ></div>
-          <div className="modal-card">
-            <header className="modal-card-head">
-              <p className="modal-card-title">
-                {editingId ? "Editar Alumno" : "Nuevo Alumno"}
-              </p>
+          <div className="modal-card modal-card-560">
+            <header className="modal-card-head modal-card-head-gradient">
+              <div>
+                <p className="modal-card-title">
+                  {editingId ? "✏️ Editar Alumno" : "➕ Nuevo Alumno"}
+                </p>
+              </div>
               <button
                 className="delete"
                 onClick={() => setShowModal(false)}
               ></button>
             </header>
             <form onSubmit={handleSubmit}>
-              <section className="modal-card-body">
-                <div className="field">
-                  <label className="label is-small">Nombre</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      placeholder="Nombre del alumno"
-                      value={form.nombre}
-                      onChange={(e) =>
-                        setForm({ ...form, nombre: e.target.value })
-                      }
-                      required
-                    />
+              <section className="modal-card-body modal-card-body-scroll">
+                {/* Información personal */}
+                <div className="edit-section">
+                  <p className="edit-section-title">📋 Información Personal</p>
+                  <div className="field">
+                    <label className="label edit-label">Nombre</label>
+                    <div className="control">
+                      <input
+                        className="input edit-input"
+                        placeholder="Nombre del alumno"
+                        value={form.nombre}
+                        onChange={(e) =>
+                          setForm({ ...form, nombre: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="columns">
-                  <div className="column">
-                    <div className="field">
-                      <label className="label is-small">Edad</label>
-                      <div className="control">
-                        <input
-                          className="input"
-                          type="number"
-                          min={0}
-                          max={99}
-                          placeholder="Ej: 15"
-                          value={form.edad}
-                          onChange={(e) =>
-                            setForm({ ...form, edad: e.target.value })
-                          }
-                        />
+                  <div className="columns">
+                    <div className="column">
+                      <div className="field">
+                        <label className="label edit-label">Edad</label>
+                        <div className="control">
+                          <input
+                            className="input edit-input"
+                            type="number"
+                            min={0}
+                            max={99}
+                            placeholder="Ej: 15"
+                            value={form.edad}
+                            onChange={(e) =>
+                              setForm({ ...form, edad: e.target.value })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="column">
+                      <div className="field">
+                        <label className="label edit-label">Curso</label>
+                        <div className="control">
+                          <input
+                            className="input edit-input"
+                            placeholder="Ej: 4° Medio A"
+                            value={form.curso}
+                            onChange={(e) =>
+                              setForm({ ...form, curso: e.target.value })
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="column">
-                    <div className="field">
-                      <label className="label is-small">Curso</label>
-                      <div className="control">
-                        <input
-                          className="input"
-                          placeholder="Ej: 4° Medio A"
-                          value={form.curso}
-                          onChange={(e) =>
-                            setForm({ ...form, curso: e.target.value })
-                          }
-                        />
+                  <div className="field">
+                    <label className="label edit-label">Colegio</label>
+                    <div className="control">
+                      <input
+                        className="input edit-input"
+                        placeholder="Nombre del colegio"
+                        value={form.colegio}
+                        onChange={(e) =>
+                          setForm({ ...form, colegio: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Apoderado */}
+                <div className="edit-section">
+                  <p className="edit-section-title">👤 Apoderado</p>
+                  <div className="columns">
+                    <div className="column">
+                      <div className="field">
+                        <label className="label edit-label">Nombre Apoderado</label>
+                        <div className="control">
+                          <input
+                            className="input edit-input"
+                            placeholder="Nombre del apoderado"
+                            value={form.nombreApoderado}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                nombreApoderado: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="column">
+                      <div className="field">
+                        <label className="label edit-label">
+                          Teléfono Apoderado
+                        </label>
+                        <div className="control">
+                          <input
+                            className="input edit-input"
+                            placeholder="+56 9 1234 5678"
+                            value={form.telefonoApoderado}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (!val.startsWith("+56")) return;
+                              const digits = val.replace(/\D/g, "").slice(2, 11);
+                              setForm({
+                                ...form,
+                                telefonoApoderado: "+56 " + digits,
+                              });
+                            }}
+                          />
+                          <p className="help">
+                            +56 seguido de 9 dígitos (
+                            {form.telefonoApoderado.replace(/\D/g, "").length - 2}
+                            /9)
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="field">
-                  <label className="label is-small">Colegio</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      placeholder="Nombre del colegio"
-                      value={form.colegio}
-                      onChange={(e) =>
-                        setForm({ ...form, colegio: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="columns">
-                  <div className="column">
-                    <div className="field">
-                      <label className="label is-small">Nombre Apoderado</label>
-                      <div className="control">
-                        <input
-                          className="input"
-                          placeholder="Nombre del apoderado"
-                          value={form.nombreApoderado}
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              nombreApoderado: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="column">
-                    <div className="field">
-                      <label className="label is-small">
-                        Teléfono Apoderado
-                      </label>
-                      <div className="control">
-                        <input
-                          className="input"
-                          placeholder="+56 9 1234 5678"
-                          value={form.telefonoApoderado}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (!val.startsWith("+56")) return;
-                            const digits = val.replace(/\D/g, "").slice(2, 11);
-                            setForm({
-                              ...form,
-                              telefonoApoderado: "+56 " + digits,
-                            });
-                          }}
-                        />
-                        <p className="help">
-                          +56 seguido de 9 dígitos (
-                          {form.telefonoApoderado.replace(/\D/g, "").length - 2}
-                          /9)
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="field">
-                  <label className="label is-small">Materias</label>
+
+                {/* Materias */}
+                <div className="edit-section">
+                  <p className="edit-section-title">📚 Materias</p>
                   <div className="tags mb-2">
                     {MATERIAS.map((m) => (
                       <span
                         key={m}
-                        className={`tag ${form.materias.includes(m) ? "is-success" : "is-light is-outlined"}`}
-                        style={{ cursor: "pointer" }}
+                        className={`tag cursor-pointer ${form.materias.includes(m) ? "is-success" : "is-light is-outlined"}`}
                         onClick={() => {
                           if (form.materias.includes(m)) {
                             const next = form.materias.filter(
@@ -1807,7 +1984,7 @@ function Alumnos() {
                   <div className="field has-addons">
                     <div className="control is-expanded">
                       <input
-                        className="input is-small"
+                        className="input is-small edit-input"
                         placeholder="Agregar materia personalizada..."
                         id="nuevaMateria"
                       />
@@ -1841,32 +2018,60 @@ function Alumnos() {
                     </div>
                   </div>
                 </div>
-                <div className="field">
-                  <label className="label is-small">Observaciones</label>
-                  <div className="control">
-                    <textarea
-                      className="textarea"
-                      placeholder="Notas u observaciones generales..."
-                      value={form.observaciones}
-                      onChange={(e) =>
-                        setForm({ ...form, observaciones: e.target.value })
-                      }
-                      rows={2}
-                    />
+
+                {/* Observaciones */}
+                <div className="edit-section">
+                  <p className="edit-section-title">📝 Observaciones</p>
+                  <div className="field mb-0">
+                    <div className="control">
+                      <textarea
+                        className="textarea edit-textarea"
+                        placeholder="Notas u observaciones generales..."
+                        value={form.observaciones}
+                        onChange={(e) =>
+                          setForm({ ...form, observaciones: e.target.value })
+                        }
+                        rows={2}
+                      />
+                    </div>
                   </div>
                 </div>
               </section>
-              <footer className="modal-card-foot">
-                <button
-                  type="button"
-                  className="button"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button type="submit" className="button is-success">
-                  {editingId ? "Guardar Cambios" : "Crear Alumno"}
-                </button>
+              <footer className="modal-card-foot modal-card-foot-finalizar">
+                <div className="level is-fullwidth mb-0">
+                  <div className="level-left">
+                    {editingId && (
+                      <button
+                        type="button"
+                        className="button is-danger is-outlined btn-edit-danger"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "¿Eliminar este alumno? Esta acción no se puede deshacer.",
+                            )
+                          ) {
+                            handleDelete(editingId);
+                            setShowModal(false);
+                          }
+                        }}
+                      >
+                        🗑️ Eliminar
+                      </button>
+                    )}
+                  </div>
+                  <div className="level-right" style={{ display: "flex", gap: "0.75rem" }}>
+                    <button
+                      type="button"
+                      className="button btn-cancelar"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Cancelar
+                    </button>
+                    <button type="submit" className="btn-edit-submit">
+                      {editingId ? "Guardar Cambios" : "Crear Alumno"}
+                    </button>
+                  </div>
+                </div>
               </footer>
             </form>
           </div>
